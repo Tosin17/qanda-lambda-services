@@ -1,0 +1,48 @@
+service: qa-game
+
+frameworkVersion: '2 || 3'
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action: 
+        - sns:CreateTopic
+        - sns:Publish
+        - sns:Subscribe
+      Resource: arn:aws:sns:us-east-1:**********
+
+functions:
+  saveGame:
+    handler: src/handler.saveGame
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+    timeout: 10
+    memorySize: 128
+  sendEmail:
+    handler: src/handler.sendEmail
+    events:
+      - sns: 
+          arn: arn:aws:sns:us-east-1:**********
+          topicName: SavedGameTopic
+      
+resources:
+  Resources:
+    SavedGameTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: SavedGameTopic
+      
+      
+
