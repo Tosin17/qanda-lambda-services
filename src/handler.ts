@@ -18,7 +18,7 @@ export const saveGame = async (event: APIGatewayProxyEvent): Promise<any> => {
     await new AWS.SNS()
       .publish({
         Message: "Some game saved",
-        TopicArn: "arn:aws:sns:us-east-1:907686965662:SavedGameTopic",
+        TopicArn: "arn:aws:sns:us-east-1:xxxxxxx:SavedGameTopic",
       })
       .promise();
 
@@ -34,7 +34,7 @@ export const saveGame = async (event: APIGatewayProxyEvent): Promise<any> => {
     };
   } catch (error) {
     logger.error(JSON.stringify(error));
-    throw Error(error);
+    throw Error(JSON.stringify(error));
   }
 };
 
